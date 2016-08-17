@@ -2,7 +2,6 @@
 int screenWidth;
 int screenHeight;
 
-			
 void hitNextButton(HWND hWnd)
 {
 	sendClick(1311,627,hWnd); 
@@ -128,8 +127,6 @@ void dragMouse(int x0, int y0, int xf, int yf, HWND hWnd)
 	Sleep(50);
 }
 
-
-
 void dragUp(HWND hWnd)
 {
 	dragMouse(1050, 300, 1050, 500, hWnd);
@@ -184,21 +181,9 @@ void test(HWND hWnd)
 {
 	std::cout << "INPUT\n";
 	//SendMessage(hWnd, WM_CHAR, (0x53), NULL);
-	Sleep(100);
-	/*
-				sendClick(187, 129, hWnd); //187 129
-	SendMessage(hWnd, WM_KEYDOWN, (0x48), 1); // H
-	SendMessage(hWnd, WM_KEYUP, (0x48), 1);
-	Sleep(10);
-				sendClick(187, 129, hWnd); //187 129
-	SendMessage(hWnd, WM_KEYDOWN, (0x4D), 1); // M 
-	SendMessage(hWnd, WM_KEYUP, (0x4D), 1);
-
-	Sleep(10);
-				sendClick(187, 129, hWnd); //187 129
-	SendMessage(hWnd, WM_KEYDOWN, (0x4D), 1); // M 
-	SendMessage(hWnd, WM_KEYUP, (0x4D), 1);
-*/
+	Sleep(100); 
+  
+  // Tells ryan to shut up in chat
 	SendMessage(hWnd, WM_KEYDOWN, (0x53), 1); // S
 	SendMessage(hWnd, WM_KEYUP, (0x53), 1);
 	Sleep(10);

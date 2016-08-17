@@ -33,7 +33,6 @@
 #define HOMEWAITING 10
 #define CHECKCHAT 11
 #define OPENDONATION 12
-#define FUCKRYAN 99
 using namespace std;
 using namespace Gdiplus;
 
@@ -47,7 +46,7 @@ string tess();
 string tessLetters();
 void getScreenshot(HWND hWnd, RECT rect);
 int snipe();
-int mainprog();
+int autoGoldRaid();
 HWND GetConsoleHwnd(void);
 HWND getHWND(string text);
 void getRECT(HWND hWnd, LPRECT prect);
@@ -62,7 +61,6 @@ cv::Mat gold11;
 cv::Mat gold10;
 cv::Mat gold9;
 cv::Mat gold8;
-
 
 cv::Mat Th8;
 cv::Mat Th9;
@@ -97,6 +95,16 @@ bool containsTh(cv::Mat base, float acc);
 
 int donate();
 int donateTroops(int flags, cv::Point p, HWND hWnd);
+
+int main()
+{
+	//snipe();
+	//donate();
+	donate();
+  
+	return 0;
+}
+
 int translateText(string s)
 {
 	if (s.find("FARM") != std::string::npos) {
@@ -104,6 +112,7 @@ int translateText(string s)
 	}
 	return -1;
 }
+
 int donateTroops(int flags, cv::Point p, HWND hWnd)
 {
 	int xSearchStart = 950;
@@ -132,42 +141,45 @@ int donateTroops(int flags, cv::Point p, HWND hWnd)
 	cout << "click: " << redX.x-220+900 << " " << redX.y+220 << "\n";
 	return 0;
 }
+
 void getScreenDims(RECT rect)
 {
 	screenW = rect.right-rect.left;
 	screenH = rect.bottom-rect.top;
 	cout << screenW << endl << screenH << endl;
 }
+
 void getScreenshot(HWND hWnd, RECT rect)
 {
 	int clashX = 0;
 	int clashY = 0;
-    int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-    int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+  int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+  int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
 	int clashW = rect.right-rect.left;
 	int clashH = rect.bottom-rect.top;
 	
 	cout << rect.right-rect.left << endl << rect.bottom-rect.top << endl;
 
-    HWND hDesktopWnd = hWnd;//getHWND("Bluestacks App Player");
-    HDC hDesktopDC = GetDC(hDesktopWnd);
-    HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
-    HBITMAP hCaptureBitmap = CreateCompatibleBitmap(hDesktopDC, 
-                            clashW, clashH);
-    SelectObject(hCaptureDC,hCaptureBitmap); 
-	BitBlt(hCaptureDC,0,0,clashW,clashH,
-           hDesktopDC,0,0,WHITENESS);
+  HWND hDesktopWnd = hWnd;//getHWND("Bluestacks App Player");
+  HDC hDesktopDC = GetDC(hDesktopWnd);
+  HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
+  HBITMAP hCaptureBitmap = CreateCompatibleBitmap(hDesktopDC, 
+                          clashW, clashH);
+  SelectObject(hCaptureDC,hCaptureBitmap); 
+	BitBlt(hCaptureDC,0,0,clashW,clashH, 
+         hDesktopDC,0,0,WHITENESS);
 
 	BitBlt(hCaptureDC,-clashX,-clashY,clashW+clashX,clashH+clashY,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
+         hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
 
-    SaveToFile(hCaptureBitmap, "screen.bmp"); // Disk location
+  SaveToFile(hCaptureBitmap, "screen.bmp"); // Disk location
 	cout << "Saved" << endl;
 
-    ReleaseDC(hDesktopWnd,hDesktopDC);
-    DeleteDC(hCaptureDC);
-    DeleteObject(hCaptureBitmap);
+  ReleaseDC(hDesktopWnd,hDesktopDC);
+  DeleteDC(hCaptureDC);
+  DeleteObject(hCaptureBitmap);
 }
+
 cv::Mat drawRectAt(cv::Mat image, int x, int y, int w, int h)
 {
 	cv::Mat copy;
@@ -175,6 +187,7 @@ cv::Mat drawRectAt(cv::Mat image, int x, int y, int w, int h)
 	rectangle(copy, cv::Point(x,y), cv::Point(x+w,y+h), cv::Scalar::all(0), CV_FILLED, 8, 0);
 	return copy;
 }
+
 cv::Point matchImages(cv::Mat base, cv::Mat match, float acc)
 {
 	cv::Mat img_display;
@@ -204,7 +217,6 @@ cv::Point matchImages(cv::Mat base, cv::Mat match, float acc)
 vector<cv::Point> getArrayMatches(cv::Mat base)
 {
 	cv::Mat match;
-	//cv::Point* arr;
 	cv::Point matchLoc = cv::Point(0,0);
 	vector<cv::Point> v;
 	cout << "get";
@@ -227,14 +239,12 @@ vector<cv::Point> getArrayMatches(cv::Mat base)
 		}
 		matchLoc = cv::Point(0,0);
 	}
-
-	//cv::imshow(image_window, base);
-
+  
 	return v;
 }
+
 void loadData()
 {
-
 	templ = cv::imread("templ.png", 1);
 	img = cv::imread("screen.bmp", 1);
 
@@ -274,28 +284,26 @@ void screenShot(HWND hWnd, int x, int y, int w, int h, string name)
 	int clashW = w;
 	int clashH = h;
 
-    int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-    int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-    HWND hDesktopWnd = hWnd;//getHWND("Bluestacks App Player");
-    HDC hDesktopDC = GetDC(hDesktopWnd);
-    HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
-    HBITMAP hCaptureBitmap =CreateCompatibleBitmap(hDesktopDC, 
-                            w, h); // adjust img dims
-    SelectObject(hCaptureDC,hCaptureBitmap); 
+  int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+  int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+  HWND hDesktopWnd = hWnd;//getHWND("Bluestacks App Player");
+  HDC hDesktopDC = GetDC(hDesktopWnd);
+  HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
+  HBITMAP hCaptureBitmap =CreateCompatibleBitmap(hDesktopDC, 
+                          w, h); // adjust img dims
+  SelectObject(hCaptureDC,hCaptureBitmap); 
 
-	BitBlt(hCaptureDC,-clashX,-clashY,clashW+clashX,clashH+clashY,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
+  BitBlt(hCaptureDC,-clashX,-clashY,clashW+clashX,clashH+clashY,
+         hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
 
-    /*BitBlt(hCaptureDC,-100,-100,nScreenWidth,nScreenHeight,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT); */
-	SaveToFile(hCaptureBitmap, name.c_str()); //Place holder - Put your code
-                                //here to save the captured image to disk
-    ReleaseDC(hDesktopWnd,hDesktopDC);
-    DeleteDC(hCaptureDC);
-    DeleteObject(hCaptureBitmap);
-
-
+  SaveToFile(hCaptureBitmap, name.c_str()); 
+  
+  // save the captured image to disk
+  ReleaseDC(hDesktopWnd,hDesktopDC);
+  DeleteDC(hCaptureDC);
+  DeleteObject(hCaptureBitmap);
 }
+
 bool containsTh(cv::Mat base, float acc)
 {
 	bool success = false;
@@ -308,6 +316,7 @@ bool containsTh(cv::Mat base, float acc)
 			break;
 		}
 	}
+  
 	if( success ) {
 		cout << "Th found.\n";
 		return true;
@@ -326,17 +335,6 @@ bool openDonateButton(cv::Mat chat, float acc)
 	return (matchImages(chat, match, acc) != cv::Point(-1,-1) );
 }
 
-int main()
-{
-	//snipe();
-	//donate();
-	donate();
-	/*
-	Sleep(3000);
-	HWND hWnd = getHWND("Bluestacks App Player");
-	MessageBox(hWnd, "Base found.", "Tiff", MB_OK & MB_TOPMOST);*/
-	return 0;
-}
 int donate()
 {
 	// Take a picture of the screen
@@ -401,33 +399,10 @@ int donate()
 			
 			break;
 		}
-		case FUCKRYAN: // 410 120
-		{
-			cout << "Reading chat..\n";
-			screenShot(hWnd, 110, 140, 210, 700, "chat.bmp"); // top
-			cv::Mat chat = cv::imread("chat.bmp", 1);
-			bool success = false;
-
-			CaptureScreen(hWnd, 0+44, 160, 410-44 ,120);
-			string op = tessLetters();
-			cout << "Tess: " << op << "\n";
-
-
-			std::size_t found = op.find("Ryan");
-			bool ryanfound = (found!=std::string::npos);
-
-			if( true ) {
-				cout << "RYANFOUND\n";
-				sendClick(187, 129, hWnd); //187 129
-				test(hWnd);
-				//sendClick(376, 127, hWnd); //187 129 UNCOMMENT FOR FUCK
-			}
-			break;
-		}
-		}
 	}
 	return 1;
 }
+
 int snipe()
 {
 	// Take a picture of the screen
@@ -475,7 +450,6 @@ int snipe()
 			screenShot(hWnd, 1135, 230, 270, 450, "right.bmp"); // right
 			cout << "Screenshots obtained\n";
 			
-			
 			cout << "Read pt. 1..\n";
 			cv::Mat baseTop = cv::imread("top.bmp", 1);
 			
@@ -513,7 +487,7 @@ int snipe()
 	return 0;
 }
 
-int mainprog()
+int autoGoldRaid()
 {
 	// Setup window data
 	HWND hWnd = getHWND("Nox App Player");
@@ -522,13 +496,6 @@ int mainprog()
 	getScreenshot(hWnd, rect);
 	getScreenDims(rect);
 	loadData();
-	/*cv::Mat match;
-	cv::Mat base;
-	img.copyTo(base);
-	templ.copyTo(match);*/
-
-	//cv::namedWindow(image_window, CV_WINDOW_AUTOSIZE);
-	//cv::namedWindow(result_window, CV_WINDOW_AUTOSIZE);
 	
 	int state = BEGIN;
 	bool running = true;
@@ -712,40 +679,11 @@ int mainprog()
 			break;
 		}
 	}
-	///*** vector<cv::Point> v = getArrayMatches(base, match);
-
 	
 
-/*
-	cv::namedWindow(image_window, CV_WINDOW_AUTOSIZE);
-	cv::namedWindow(result_window, CV_WINDOW_AUTOSIZE);
-
-	char* trackbar_label = "Method: \n 0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED";
-	cv::createTrackbar(trackbar_label, image_window, &match_method, max_Trackbar, MatchingMethod);
-
-	MatchingMethod(0, 0);
-*/
 	cv::waitKey(0);
-	/*
-	img = cv::imread("C:\\Users\\Ivan\\Desktop\\base.png", 1);
-	templ = cv::imread("C:\\Users\\Ivan\\Desktop\\mine.jpg", 1);
-
-	cv::namedWindow(image_window, CV_WINDOW_AUTOSIZE);
-	cv::namedWindow(result_window, CV_WINDOW_AUTOSIZE);
-
-	char* trackbar_label = "Method: \n 0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED";
-	cv::createTrackbar(trackbar_label, image_window, &match_method, max_Trackbar, MatchingMethod);
-
-	MatchingMethod(0, 0);
-
-	cv::waitKey(0);
-	
-	return 0;
-	*/
 	return 0;
 }
-
-
 
 void MatchingMethod(int, void*)
 {
@@ -798,43 +736,6 @@ void MatchingMethod(int, void*)
 	return;
 }
 
-int testmain()
-{
-	SHORT F7state = GetAsyncKeyState( VK_F7 );
-	SHORT F8state = GetAsyncKeyState( VK_F8 );
-	SHORT F9state = GetAsyncKeyState( VK_F9 );
-
-
-	HWND hwndMyWnd = GetConsoleHwnd();
-	SetWindowPos(hwndMyWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-	ShowWindow(hwndMyWnd, SW_NORMAL);
-	
-	HWND hWnd = getHWND("Bluestacks App Player");
-	RECT rect;
-	getRECT(hWnd, &rect);
-	
-
-	cout << "F8 to barch\n";
-	cout << "F9 to barracks\n";
-	while( true )
-	{
-		if( GetAsyncKeyState( VK_F8 ) != F8state )
-		{
-			//refillBarracks(hWnd);
-			barch4Sides(5, hWnd);
-			system("pause");
-		}
-		if( GetAsyncKeyState( VK_F9 ) != F9state )
-		{
-			refillBarracks(hWnd);
-			//barch4Sides(3, hWnd);
-			system("pause");
-		}
-	}
-	system("pause");
-
-}
-
 void getRECT( HWND hWnd, LPRECT prect )
 {
 	bool cont = true;
@@ -852,6 +753,7 @@ void getRECT( HWND hWnd, LPRECT prect )
 		}
 	}
 }
+
 HWND getHWND(string text)
 {
 	bool cont = true;
@@ -872,256 +774,6 @@ HWND getHWND(string text)
 	return NULL;
 }
 
-
-int Tiffmain()           
-{ 
-	SHORT F7state = GetAsyncKeyState( VK_F7 );
-	SHORT F8state = GetAsyncKeyState( VK_F8 );
-	SHORT F9state = GetAsyncKeyState( VK_F9 );
-
-	HWND hWnd = getHWND("Bluestacks App Player");
-	RECT rect;
-	getRECT(hWnd, &rect);
-
-    ofstream logfile;
-    logfile.open ("log.txt");
-	
-	int minGold = 120000;
-	int secondsToWait = 3; // 3+ reccomended
-	bool done = false;
-	clock_t t;
-	int count = 0;
-	int fail = 0;
-	int goldsum = 0;
-	int autoraid = 0;
-	int reloadbarracks = 1;
-	int finishedraid = 0;
-	int barchnum = 5;
-	HWND hwndMyWnd = GetConsoleHwnd();
-	SetWindowPos(hwndMyWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-	ShowWindow(hwndMyWnd, SW_NORMAL);
-	t = clock();
-	
-	cout << "Start.\nInput secs to wait\n";
-	cin >> secondsToWait;
-	cout << "Input minimum gold to start. (Reccomended 150000-200000)\n";
-	cin >> minGold;
-	cout << "Autoraid? 1-Yes 0-No.\n";
-	cin >> autoraid;
-	//cout << "Reload barracks? 1-Yes 0-No.\n";
-	//cin >> reloadbarracks;
-	cout << "Number to barch Rec 30\n";
-	cin >> barchnum;
-	cout << "Make sure you're on village screen. Input to start. ";
-	system("pause");
-	cout << "Begun.\n";
-	
-	logfile << "Begin.\n";
-
-	zoomOut(hWnd);
-	Sleep(500);
-
-	if( reloadbarracks == 1)
-		refillBarracks(hWnd);
-	Sleep(1000);
-	// end zoom
-	sendClick(210,930,hWnd); // Attack
-	Sleep(500);
-	sendClick(430,775,hWnd); // Search
-
-	Sleep(3000);
-	int trycount = 0;
-	while( !done )
-	{
-		
-		if( GetAsyncKeyState( VK_F8 ) != F8state )
-		{
-			system("pause");
-		}
-		//CaptureScreen();
-		//string op = tess();
-		float time = ((float)(clock()-t)/CLOCKS_PER_SEC);
-		if( time > secondsToWait )
-		{
-			trycount++;
-			int gold = 0;
-			for( int i = 0; i < 3; i++ )
-			{
-				cout << "Read " << i+1 << "/3:\n";
-				if( i == 1 )
-					dragUp(hWnd);
-				if( i == 2 )
-					dragDown(hWnd);
-				CaptureScreen(hWnd);
-				string op = tess();
-				gold = getGold(op);
-				cout << gold << endl;
-				/*if( gold == 0 )
-					zoomIn(hWnd);*/
-				if( gold != 0 ) 
-					break;
-			}
-			if( gold == 0 )
-			{
-				cout << "Couldn't read :(\n";
-				fail++;
-			}
-			else if( gold > minGold )
-			{
-				goldsum += gold;
-				cout << "\n***************************************************\n";
-				cout << "Found " << gold << " gold, raid suggested.\n";
-				cout << "***************************************************\n\n";
-				cout << "Press F7 to resume search\n";
-				cout << "Press F8 to mute & wait\n";
-				cout << "Press F9 to barch the shit out of it\n";
-
-				logfile << "Found " << gold << " gold.\n";
-
-				//zoomOut(hWnd);
-				Sleep(100);
-				if( autoraid == 1 )
-				{
-					cout << "Autoraid activated.\n";
-					logfile << "Autoraid activated.\n";
-					//barch4Sides(barchnum, hWnd);
-					PlaySound(TEXT("recycle.wav"), NULL, SND_FILENAME);
-					bool br = false;
-					for( int i = 0; i < 20; i++ )
-					{
-						if( F7state != GetAsyncKeyState( VK_F7 ) )
-						{
-							cout << "Restart search.\n";
-							br = true;
-							break;
-						}
-						Sleep(1000);
-					}
-					if( br )
-					{
-						system("pause");
-						sendClick(1700, 750, hWnd); //next
-						continue;
-					}
-					barch4Sides(barchnum, hWnd);
-					Sleep(90000);
-					sendClick(200,790, hWnd); // Surrender
-					Sleep(1000);
-					sendClick(1102,615, hWnd); // Confirm
-					Sleep(100);
-					sendClick(1102,615, hWnd); // Confirm
-					Sleep(1000);
-					sendClick(964,851,hWnd); // Return home
-					Sleep(100);
-					sendClick(964,851,hWnd); // Return home
-					Sleep(4000);
-					finishedraid = 1;
-				}
-				else
-				{
-					while( true )
-					{
-						PlaySound(TEXT("recycle.wav"), NULL, SND_FILENAME);
-						if( F7state != GetAsyncKeyState( VK_F7 ) )
-						{
-							cout << "Restart search.\n";
-							break;
-						}
-						else if( F8state != GetAsyncKeyState( VK_F8 ) )
-						{
-							system("pause");
-							break;
-						}
-						else if( F9state != GetAsyncKeyState( VK_F9 ) )
-						{
-							cout << "Barching\n";
-							//barch4Sides(3, hWnd);
-							system("pause");
-							break;
-						}
-					}
-					Sleep(100);
-				}
-				cout << "\nSearch continued.\n";
-			}
-			else
-			{
-				goldsum += gold;
-				cout << "Found " << gold << " gold. Low. \n";
-			}
-			
-			if( finishedraid == 1 )
-			{
-				logfile << "Finished raid.\n";
-
-				zoomOut(hWnd);
-				Sleep(500);
-
-				refillBarracks(hWnd);
-				Sleep(1500);
-				for(int i = 0; i < 6 ; i++ ) // default 12
-				{
-					zoomOut(hWnd);
-					cout << "Hibernate "<< i << "/20" << "\n";
-					logfile << "Hibernate.\n";
-					Sleep(30000);
-					refillBarracks(hWnd);
-				}
-				// end zoom
-				sendClick(210,930,hWnd); // Attack
-				Sleep(1000);
-				sendClick(430,775,hWnd); // Search
-
-				finishedraid = 0;
-				trycount = 0;
-			}
-			if( trycount > 20 )
-			{
-				cout << "Refilling.\n";
-				logfile << "Refilling after 15 tries.\n";
-				Sleep(2000);
-				trycount = 0;
-				sendClick(200,790, hWnd); // Surrender
-				Sleep(3000);
-				zoomOut(hWnd);
-				Sleep(500);
-
-				refillBarracks(hWnd);
-				Sleep(1500);
-				// end zoom
-				sendClick(210,930,hWnd); // Attack
-				Sleep(1000);
-				sendClick(430,775,hWnd); // Search
-
-				Sleep(4000);
-				finishedraid = 0;
-				continue;
-			}
-			else
-				sendClick(1700, 750, hWnd);
-
-			t = clock();
-			count++;
-			cout << "\n";
-			cout << "Try #" << count << "\n";
-			cout << "Avg $: " << ((float)goldsum)/(count-fail) << "\n";
-			cout << "Rate: " << count-fail << "/"<< count << ", " << ((float)(count-fail))/count*100 << "%\n";
-			logfile << "Try #" << count << "\n";
-			logfile << "Sum $: " << goldsum;
-			logfile << "Rate: " << count-fail << "/"<< count << ", " << ((float)(count-fail))/count*100 << "%\n";
-			cout << "Press F8 to Pause.\n\n";
-
-		}
-		Sleep(100);
-	}
-
-    logfile.close();
-
-	cout << "Stopped.\n";
-	system("pause");
-
-    return 0;
-}
 string tess()
 {
 	char *outText;
@@ -1146,6 +798,7 @@ string tess()
     pixDestroy(&image);
 	return outText;
 }
+
 string tessLetters()
 {
 	char *outText;
@@ -1170,46 +823,47 @@ string tessLetters()
     pixDestroy(&image);
 	return outText;
 }
+
 HWND GetConsoleHwnd(void)
-   {
-       #define MY_BUFSIZE 1024 // Buffer size for console window titles.
-       HWND hwndFound;         // This is what is returned to the caller.
-       char pszNewWindowTitle[MY_BUFSIZE]; // Contains fabricated
-                                           // WindowTitle.
-       char pszOldWindowTitle[MY_BUFSIZE]; // Contains original
-                                           // WindowTitle.
+{
+  #define MY_BUFSIZE 1024 // Buffer size for console window titles.
+  HWND hwndFound;         // This is what is returned to the caller.
+  char pszNewWindowTitle[MY_BUFSIZE]; // Contains fabricated
+                                         // WindowTitle.
+  char pszOldWindowTitle[MY_BUFSIZE]; // Contains original
+                                         // WindowTitle.
 
-       // Fetch current window title.
+  // Fetch current window title.
 
-       GetConsoleTitle(pszOldWindowTitle, MY_BUFSIZE);
+  GetConsoleTitle(pszOldWindowTitle, MY_BUFSIZE);
 
-       // Format a "unique" NewWindowTitle.
+ // Format a "unique" NewWindowTitle.
 
-       wsprintf(pszNewWindowTitle,"%d/%d",
-                   GetTickCount(),
-                   GetCurrentProcessId());
+  wsprintf(pszNewWindowTitle,"%d/%d",
+           GetTickCount(),
+           GetCurrentProcessId());
 
-       // Change current window title.
+  // Change current window title.
 
-       SetConsoleTitle(pszNewWindowTitle);
+  SetConsoleTitle(pszNewWindowTitle);
 
-       // Ensure window title has been updated.
+  // Ensure window title has been updated.
 
-       Sleep(40);
+  Sleep(40);
 
-       // Look for NewWindowTitle.
+  // Look for NewWindowTitle.
 
-       hwndFound=FindWindow(NULL, pszNewWindowTitle);
+  hwndFound=FindWindow(NULL, pszNewWindowTitle);
 
-       // Restore original window title.
+  // Restore original window title.
 
-       SetConsoleTitle(pszOldWindowTitle);
+  SetConsoleTitle(pszOldWindowTitle);
 
-       return(hwndFound);
-   }
+  return(hwndFound);
+}
+   
 bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName)
 {
-
   HDC hDC;
   int iBits;
   WORD wBitCount;
@@ -1281,13 +935,8 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName)
   bmfHdr.bfReserved1 = 0;
   bmfHdr.bfReserved2 = 0;
   bmfHdr.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER) + dwPaletteSize;
-// Bullshit goes here
 
-
-  // End bullshit
-  
   WriteFile(fh, (LPSTR)&bmfHdr, sizeof(BITMAPFILEHEADER), &dwWritten, NULL);
-
   WriteFile(fh, (LPSTR)lpbi, dwDIBSize, &dwWritten, NULL);
 
   //reOpen(hBitmap, lpszFileName);
@@ -1297,6 +946,7 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName)
   CloseHandle(fh);
   return TRUE;
 }
+
 int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 {
    UINT  num = 0;          // number of image encoders
@@ -1327,99 +977,30 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
    return -1;  // Failure
 }
 
-
-void CaptureScreen(HWND hWnd)
-{ 
-	HWND chWnd = GetConsoleWindow();
-	//MoveWindow(chWnd,400,600,250,350,TRUE); // x, y, w, h
-	
-	int clashX = 65;
-	int clashY = 83;
-	int clashW = 357;
-	int clashH = 171;
-    int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-    int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-    HWND hDesktopWnd = hWnd;//getHWND("Bluestacks App Player");
-    HDC hDesktopDC = GetDC(hDesktopWnd);
-    HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
-    HBITMAP hCaptureBitmap =CreateCompatibleBitmap(hDesktopDC, 
-                            700, 700);
-    SelectObject(hCaptureDC,hCaptureBitmap); 
-	BitBlt(hCaptureDC,0,0,700,700,
-           hDesktopDC,0,0,WHITENESS);
-
-	BitBlt(hCaptureDC,-clashX,-clashY,clashW+clashX,clashH+clashY,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
-
-    /*BitBlt(hCaptureDC,-100,-100,nScreenWidth,nScreenHeight,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT); */
-    SaveToFile(hCaptureBitmap, "blah.bmp"); //Place holder - Put your code
-                                //here to save the captured image to disk
-    ReleaseDC(hDesktopWnd,hDesktopDC);
-    DeleteDC(hCaptureDC);
-    DeleteObject(hCaptureBitmap);
-}
-
+// TODO: This is the old version, remove duplication
 void CaptureScreen(HWND hWnd, int x, int y, int w, int h)
 { 
 	HWND chWnd = GetConsoleWindow();
-	//MoveWindow(chWnd,400,600,250,350,TRUE); // x, y, w, h
 	
 	int clashX = x;
 	int clashY = y;
 	int clashW = w;
 	int clashH = h;
-    int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-    int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-    HWND hDesktopWnd = hWnd;//getHWND("Bluestacks App Player");
-    HDC hDesktopDC = GetDC(hDesktopWnd);
-    HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
-    HBITMAP hCaptureBitmap =CreateCompatibleBitmap(hDesktopDC, 
-                            700, 700);
-    SelectObject(hCaptureDC,hCaptureBitmap); 
-	BitBlt(hCaptureDC,0,0,700,700,
-           hDesktopDC,0,0,WHITENESS);
+  int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+  int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+  HWND hDesktopWnd = hWnd;
+  HDC hDesktopDC = GetDC(hDesktopWnd);
+  HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
+  HBITMAP hCaptureBitmap = CreateCompatibleBitmap(hDesktopDC, 
+                           700, 700);
+  SelectObject(hCaptureDC,hCaptureBitmap); 
+  BitBlt(hCaptureDC,0,0,700,700,
+         hDesktopDC,0,0,WHITENESS);
 
-	BitBlt(hCaptureDC,-clashX,-clashY,clashW+clashX,clashH+clashY,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
-
-    /*BitBlt(hCaptureDC,-100,-100,nScreenWidth,nScreenHeight,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT); */
-    SaveToFile(hCaptureBitmap, "blah.bmp"); //Place holder - Put your code
-                                //here to save the captured image to disk
-    ReleaseDC(hDesktopWnd,hDesktopDC);
-    DeleteDC(hCaptureDC);
-    DeleteObject(hCaptureBitmap);
+  BitBlt(hCaptureDC,-clashX,-clashY,clashW+clashX,clashH+clashY,
+         hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
+  SaveToFile(hCaptureBitmap, "blah.bmp");
+  ReleaseDC(hDesktopWnd,hDesktopDC);
+  DeleteDC(hCaptureDC);
+  DeleteObject(hCaptureBitmap);
 }
-void oldCaptureScreen()
-{ 
-	HWND hWnd = GetConsoleWindow();
-	MoveWindow(hWnd,700,600,250,350,TRUE); // x, y, w, h
-	
-	int clashX = 172;
-	int clashY = 100;
-	int clashW = 130;
-	int clashH = 200;
-    int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-    int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-    HWND hDesktopWnd = GetDesktopWindow();
-    HDC hDesktopDC = GetDC(hDesktopWnd);
-    HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
-    HBITMAP hCaptureBitmap =CreateCompatibleBitmap(hDesktopDC, 
-                            700, 700);
-    SelectObject(hCaptureDC,hCaptureBitmap); 
-	BitBlt(hCaptureDC,0,0,700,700,
-           hDesktopDC,0,0,WHITENESS);
-
-	BitBlt(hCaptureDC,-clashX,-clashY,clashW+clashX,clashH+clashY,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT);
-
-    /*BitBlt(hCaptureDC,-100,-100,nScreenWidth,nScreenHeight,
-           hDesktopDC,0,0,SRCCOPY|CAPTUREBLT); */
-    SaveToFile(hCaptureBitmap, "blah.bmp"); //Place holder - Put your code
-                                //here to save the captured image to disk
-    ReleaseDC(hDesktopWnd,hDesktopDC);
-    DeleteDC(hCaptureDC);
-    DeleteObject(hCaptureBitmap);
-}
-// MouseMove function

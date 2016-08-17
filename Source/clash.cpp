@@ -48,42 +48,6 @@ void refillBarracks(HWND hWnd)
 		hitNextBarracksButton(hWnd);
 	}
 	hitBarracksXButton(hWnd);
-	/*
-	int delay = 350;
-	dragUp(hWnd);
-	Sleep(delay);
-	sendClick(400,200, hWnd); // Clear selection
-	Sleep(delay);v
-	sendClick(400,200, hWnd); // Clear selection
-	Sleep(delay);
-	sendClick(295, 617, hWnd); // Select Barracks
-	Sleep(delay);
-
-	sendClick(1250, 900, hWnd); // Train Troops
-	Sleep(delay);
-
-	int x = 800;
-	int y = 500;
-
-	for( int j = 0; j < 4; j++ )
-	{
-		if( j == 2 )
-		{
-			x = 625;
-		}
-		for( int i = 0; i < 25; i++ )
-		{
-			sendClick(x, y, hWnd); // Build 1
-			Sleep(20);
-		}
-		sendClick(1495, 520, hWnd); // Next
-		Sleep(250);
-	}
-	sendClick(1435,210, hWnd); // Exit barracks
-	Sleep(delay);
-	sendClick(400,200, hWnd); // Clear selection
-	Sleep(delay);
-*/
 }
 
 
@@ -176,66 +140,7 @@ void selectTroops(int slot, HWND hWnd)
 			cout << "Err, slot must be 1-3\n";
 	}
 }
-/*
 
-void barchLeft(int number)
-{
-	cout << "Barch NW\n";
-	int x0 = 250;
-	int xf = 950;
-	int y0 = 600;
-	int yf = 50;
-	// NW
-	selectTroops(1);
-	float slope = ((float)(xf-x0))/(yf-y0)
-	for( int dx = x; dx <= xf; dx += (xf-x0)/num)
-	{
-		int dy = (x0*slope+y0)+(int)(slope*dx);
-
-		MouseMove((rand()%80-40)+dx,(rand()%80-40)+dy);
-		LeftClick();
-		Sleep(100);
-	}
-	Sleep(2000);
-	selectTroops(2);
-	for( int dx = x; dx <= xmax; dx += (xmax-x)/number)
-	{
-		int dy = 800-(int)(0.78*dx);
-		cout << "Dx = " << dx << ", dy = " << dy << "\n";
-		MouseMove((rand()%80-40)+dx,(rand()%80-40)+dy);
-		LeftClick();
-		Sleep(100);
-	}
-
-	cout << "Barch NE\n";
-	dragUp();
-	selectTroops(1);
-	// NE
-	x = 950;
-	xmax = 1680;
-	y = 50;
-	ymax = 550;
-	// NW
-	Sleep(1000);
-	for( int dx = x; dx < xmax; dx += (xmax-x)/number)
-	{
-		int dy = -629+(int)(.69*dx);
-		cout << "Dx = " << dx << ", dy = " << dy << "\n";
-		MouseMove((rand()%80-40)+dx,(rand()%80-40)+dy);
-		LeftClick();
-		Sleep(100);
-	}
-	selectTroops(2);
-	Sleep(2000);
-	for( int dx = x; dx < xmax; dx += (xmax-x)/number)
-	{
-		int dy = -629+(int)(.69*dx);
-		cout << "Dx = " << dx << ", dy = " << dy << "\n";
-		MouseMove((rand()%80-40)+dx,(rand()%80-40)+dy);
-		LeftClick();
-		Sleep(100);
-	}
-}*/
 void dropBarbs(int x, int y, int num, HWND hWnd)
 {
 	selectTroops(1, hWnd);
