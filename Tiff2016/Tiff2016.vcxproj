@@ -10,6 +10,19 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\controls.h" />
+    <ClInclude Include="include\coords.h" />
+    <ClInclude Include="include\stateMachine.h" />
+    <ClInclude Include="include\window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\controls.cpp" />
+    <ClCompile Include="src\coords.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\stateMachine.cpp" />
+    <ClCompile Include="src\window.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{02DDC474-C84C-437F-8920-2E4E678D703A}</ProjectGuid>
     <RootNamespace>Tiff2016</RootNamespace>
@@ -41,7 +54,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\ivanc\Tess2016\opencv\build\include;C:\Users\ivanc\Tess2016\tesseract\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Tiff2016\include;C:\Users\ivanc\Tess2016\opencv\build\include;C:\Users\ivanc\Tess2016\tesseract\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -62,9 +75,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
