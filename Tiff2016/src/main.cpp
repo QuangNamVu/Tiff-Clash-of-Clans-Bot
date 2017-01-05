@@ -1,41 +1,33 @@
-#include <tesseract\baseapi.h>
-#include <leptonica\allheaders.h>
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
-#include <iostream>
-#include <vector> 
-
 #include "window.h"
-#include "controls.h"
-#include "stateMachine.h"
-
-using namespace std;
-using namespace cv;
-
-void getScreenshot(HWND hWnd, RECT rect);
-void initApi();
-int opencvTest();
-bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName);
-void windowTest();
+#include "bot.h"
 
 int main(void) {
-    
     HWND hWnd = getHWND("Nox App Player");
     
-    StateMachine* stateMachine = new StateMachine();
-    stateMachine->init(hWnd);
-
-    delete stateMachine;
-
-    system("pause");
-    return 0;
-}
-
-void windowTest() {
+    cout << "start";
+    Bot* bot = new Bot(hWnd);
+    cout << "end";
+        
+    delete bot;
     
+    std::cin.ignore();
+    return EXIT_SUCCESS;
 }
+
+
+
+
+
+
+
+
+
+
+
+/*
+void windowTest() {
+}
+    
 
 int opencvTest() {
     Mat image;
@@ -52,7 +44,8 @@ int opencvTest() {
     waitKey(0); // Wait for a keystroke in the window
     return 0;
 }
-
+*/
+/*
 void initApi() {
     char *outText;
 
@@ -75,4 +68,4 @@ void initApi() {
     pixDestroy(&image);
     system("pause");
     return;
-}
+}*/

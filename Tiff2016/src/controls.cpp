@@ -7,8 +7,6 @@ void sendClick(HWND hWnd, Coords coords) {
 void sendClick(HWND hWnd, int x, int y) {
     sendMouseDown(hWnd, x, y);
     sendMouseUp(hWnd, x, y);
-
-    cout << "Clicking: " << x << ", " << y << "\n";
 }
 
 void sendMouseDown(HWND hWnd, int x, int y) {
@@ -23,48 +21,43 @@ void sendMouseMove(HWND hWnd, int x, int y) {
     SendMessage(hWnd, WM_MOUSEMOVE, MK_LBUTTON, MAKELPARAM(x,y));
 }
 
-void zoomOut(HWND hWnd) {
-    cout << "Zoom out\n";
-    for( int i = 0; i < 10; i++ ) {
-        PostMessage(hWnd, WM_KEYDOWN, (0x28), 1); // down, press
-        PostMessage(hWnd, WM_KEYUP, (0x28), 1); // down, unpress
-    }
-}
-
 void zoomIn(HWND hWnd) {
-    cout << "Zoom in\n";
-    for( int i = 0; i < 1; i++ ) {
-        PostMessage(hWnd, WM_KEYDOWN, (0x26), 1); // Up, press
-        PostMessage(hWnd, WM_KEYUP, (0x26), 1); // Up, unpress
+    for( int i = 0; i < KEY_PRESS_TRIES; i++ ) {
+        PostMessage(hWnd, WM_KEYDOWN, UP_ARROW_KEYCODE, 1); // Up arrow, press
+        PostMessage(hWnd, WM_KEYUP, UP_ARROW_KEYCODE, 1);   // Up arrow, unpress
     }
 }
 
-double degToRad(double deg) {
-    return deg * 0.0174532925;
+void zoomOut(HWND hWnd) {
+    for( int i = 0; i < KEY_PRESS_TRIES; i++ ) {
+        PostMessage(hWnd, WM_KEYDOWN, DOWN_ARROW_KEYCODE, 1); // Down arrow, press
+        PostMessage(hWnd, WM_KEYUP, DOWN_ARROW_KEYCODE, 1);   // Down arrow, unpress
+    }
 }
 
 void raidCoordinates(vector<cv::Point> v, HWND hWnd) {
-    vector<cv::Point> deployVec;
+    vector<cv::Point> deployCoordinates;
 
     for(int i = 0; i < v.size(); i++) {
         cv::Point coord = v[i];
         
-        if(coord.y > 640)
-            continue;
-
-        for(int i = 0; i < 360; i+=10) {
+        // Gets a circle centered around coord,
+        // with radius of RAID_RADIUS pixels,
+        // separated by TROOP_SEPARATION degrees.
+        for(int i = 0; i < 360; i += TROOP_SEPARATION) {
             cv::Point pt = cv::Point(
-                coord.x + std::sin((double)degToRad(i)) * 100,
-                coord.y + std::cos((double)degToRad(i)) * 100);
-            deployVec.push_back(pt);
-            // cout << degToRad(std::sin((double)i)) * 100; // Print coord
+                coord.x + degSin(i)*RAID_RADIUS,
+                coord.y + degCos(i)*RAID_RADIUS);
+
+            // Skip if coordinate goes past bottom bar.
+            if(coord.y < SCREEN_BOTTOM_LIMIT)
+                deployCoordinates.push_back(pt);
         }
     }
 
-    for(int i = 0; i < deployVec.size(); i++) {
-        cv::Point coord = deployVec[i];
+    for(int i = 0; i < deployCoordinates.size(); i++) {
+        cv::Point coord = deployCoordinates[i];
         sendClick(hWnd, coord.x, coord.y);
-        // cout << coord << endl; // Print coord
-        Sleep(10);
+        pauseTime(CLICK_DELAY);
     }
 }

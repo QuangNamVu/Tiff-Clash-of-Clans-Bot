@@ -1,16 +1,20 @@
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
-#include <windows.h>
-#include <iostream>
 #include <vector>
+#include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
+#include <windows.h>
 #include "coords.h"
+#include "utils.h"
 
 using namespace std;
+
+/*
+ * Simulates user controls like clicks and key actions.
+ */
 
 void sendClick(HWND hWnd, Coords coords);
 void sendClick(HWND hWnd, int x, int y);

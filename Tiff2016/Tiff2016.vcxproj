@@ -13,14 +13,16 @@
   <ItemGroup>
     <ClInclude Include="include\controls.h" />
     <ClInclude Include="include\coords.h" />
-    <ClInclude Include="include\stateMachine.h" />
+    <ClInclude Include="include\bot.h" />
+    <ClInclude Include="include\utils.h" />
     <ClInclude Include="include\window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\controls.cpp" />
     <ClCompile Include="src\coords.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\stateMachine.cpp" />
+    <ClCompile Include="src\bot.cpp" />
+    <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

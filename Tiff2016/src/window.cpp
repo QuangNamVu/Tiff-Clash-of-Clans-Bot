@@ -1,5 +1,9 @@
 #include <window.h>
 
+/*
+ * Finds a window with the provided name, and returns a handle 
+ * to that window.
+ */ 
 HWND getHWND(string text) {
     bool cont = true;
     while (cont == true) {
@@ -15,6 +19,9 @@ HWND getHWND(string text) {
     return NULL;
 }
 
+/*
+ * Gets the Rect information from the window handle. 
+ */
 void getRECT(HWND hWnd, LPRECT prect) {
     bool cont = true;
     while (cont == true) {
@@ -22,34 +29,37 @@ void getRECT(HWND hWnd, LPRECT prect) {
             cout << "Rect found" << endl;
             return;
         } else {
-            cout << "Window not found, try again.\n";
+            cout << "Rect not found, try again.\n";
             system("pause");
         }
     }
 }
 
-// Only works for directX not opengl!!
+/*
+ * Takes a screenshot of the entire provided window. 
+ * Saves the screenshot to "fullscreen.bmp".
+ */
 void captureScreenshot(HWND hWnd) {
     RECT rect;
     getRECT(hWnd, &rect);
     captureScreenshot(hWnd, 0, 0, rect.right-rect.left, rect.bottom-rect.top, "fullscreen.bmp");
 }
 
+/*
+ * Takes a screenshot of the provided window at specific coordinates.
+ * Saves the screenshot to the given filename;
+ */
 void captureScreenshot(HWND hWnd, int x, int y, int w, int h, string name) {
-    int clashX = x;
-    int clashY = y;
-    int clashW = w;
-    int clashH = h;
-
     int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
     int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+
     HWND hDesktopWnd = hWnd;
     HDC hDesktopDC = GetDC(hDesktopWnd);
     HDC hCaptureDC = CreateCompatibleDC(hDesktopDC);
     HBITMAP hCaptureBitmap = CreateCompatibleBitmap(hDesktopDC, w, h);
     SelectObject(hCaptureDC,hCaptureBitmap); 
 
-    BitBlt(hCaptureDC, -clashX, -clashY, clashW+clashX, clashH+clashY,
+    BitBlt(hCaptureDC, -x, -y, w+x, h+y,
            hDesktopDC, 0, 0, SRCCOPY|CAPTUREBLT);
     
     SaveToFile(hCaptureBitmap, name.c_str()); 
@@ -59,7 +69,11 @@ void captureScreenshot(HWND hWnd, int x, int y, int w, int h, string name) {
     DeleteObject(hCaptureBitmap);
 }
 
-
+/*
+ * Save an image to file.
+ * Code modified from MSDN documentation:
+ * https://msdn.microsoft.com/en-us/library/dd145119.aspx
+ */
 bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     HDC hDC;
     int iBits;
@@ -122,7 +136,7 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     if (fh == INVALID_HANDLE_VALUE)
     return FALSE;
 
-    bmfHdr.bfType = 0x4D42; // "BM"
+    bmfHdr.bfType = 0x4D42;
     dwDIBSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + dwPaletteSize + dwBmBitsSize;
     bmfHdr.bfSize = dwDIBSize;
     bmfHdr.bfReserved1 = 0;
@@ -138,8 +152,12 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     return TRUE;
 }
 
-cv::Point matchImages(cv::Mat base, cv::Mat match, float acc)
-{
+/*
+ * Takes a base image and a template, and finds the first point where
+ * the template matches the image, within an accuracy range [0, 1].
+ * If no match is found, returns the point (-1, -1).
+ */
+cv::Point matchImages(cv::Mat base, cv::Mat match, float acc) {
     cv::Mat img_display;
     cv::Mat result;
 
@@ -147,16 +165,13 @@ cv::Point matchImages(cv::Mat base, cv::Mat match, float acc)
     int result_cols = base.cols - match.cols + 1;
     int result_rows = base.rows - match.rows + 1;
     result.create(result_rows, result_cols, CV_32FC1);
-    cv::Mat beforeNorm;
+
     matchTemplate(img_display, match, result, 5);
 
     double minVal; double maxVal; cv::Point minLoc; cv::Point maxLoc;
     cv::Point matchLoc;
     cv::minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, cv::Mat());
-    /// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
     matchLoc = maxLoc;
-    int num = 0;
-    //cout << "Acc: " << result.at<float>(matchLoc.y + num, matchLoc.x + num) << endl;
     float err = result.at<float>(matchLoc.y, matchLoc.x);
 
     if( err > acc )
@@ -165,6 +180,11 @@ cv::Point matchImages(cv::Mat base, cv::Mat match, float acc)
         return cv::Point(-1,-1);
 }
 
+/*
+ * Draws a black rectangle at the coordinates specified.
+ * matchImages() only finds one match, so this covers up the found
+ * match so it can run the search again.
+ */
 cv::Mat drawRectAt(cv::Mat image, int x, int y, int w, int h) {
     cv::Mat copy;
     image.copyTo(copy);
@@ -172,21 +192,28 @@ cv::Mat drawRectAt(cv::Mat image, int x, int y, int w, int h) {
     return copy;
 }
 
-vector<cv::Point> getArrayMatches(cv::Mat base, vector<cv::Mat> matches) {
+/*
+ * Finds an array of points where the base image matches the template.
+ */
+vector<cv::Point> getArrayMatches(cv::Mat base, vector<cv::Mat> templates) {
     cv::Mat match;
-    cv::Point matchLoc = cv::Point(0,0);
+    cv::Point matchLoc;
     vector<cv::Point> v;
 
-    for(int i = 0; i < matches.size(); i++) {
-        match = matches.at(i);
+    // Try each template image (gold mine)
+    for(int i = 0; i < templates.size(); i++) {
+        match = templates.at(i);
         int matchW = match.cols;
         int matchH = match.rows;
 
+        // Record each match, draw a black rectangle over it, and keep
+        // searching until no more matches.
         while(matchLoc.x != -1) {
-            matchLoc = matchImages(base, match, 0.75);
+            matchLoc = matchImages(base, match, MATCH_ACCURACY);
             if( matchLoc.x == -1 )
                 break;
-            base=drawRectAt(base, matchLoc.x, matchLoc.y, matchW, matchH);
+
+            base = drawRectAt(base, matchLoc.x, matchLoc.y, matchW, matchH);
             v.push_back(matchLoc);
         }
         matchLoc = cv::Point(0,0);
