@@ -1,71 +1,16 @@
 #include "window.h"
 #include "bot.h"
 
+/*
+ * Requires Nox App Player to be open, and Clash of Clans loaded 
+ * on the home screen. Starts off the raid bot.
+ */
 int main(void) {
-    HWND hWnd = getHWND("Nox App Player");
-    
-    cout << "start";
-    Bot* bot = new Bot(hWnd);
-    cout << "end";
-        
+    Bot* bot = new Bot();
+    bot->begin();
+
     delete bot;
     
     std::cin.ignore();
     return EXIT_SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-/*
-void windowTest() {
-}
-    
-
-int opencvTest() {
-    Mat image;
-    image = imread("Images/TestText.jpg", IMREAD_COLOR); // Read the file
-
-    if (!image.data) { // Check for invalid 
-        cout << "Could not open or find the image" << std::endl;
-        return -1;
-    }
-
-    namedWindow("Display window", WINDOW_AUTOSIZE); // Create a window for display.
-    imshow("Display window", image); // Show our image inside it.
-
-    waitKey(0); // Wait for a keystroke in the window
-    return 0;
-}
-*/
-/*
-void initApi() {
-    char *outText;
-
-    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-    // Initialize tesseract-ocr with English, without specifying tessdata path
-    if (api->Init("C:/Program Files (x86)/Tesseract-OCR/tessdata", "eng")) {
-        fprintf(stderr, "Could not initialize tesseract.\n");
-        exit(1);
-    }
-
-    // Open input image with leptonica library
-    Pix *image = pixRead("Images/TestText.jpg");
-    api->SetImage(image);
-    // Get OCR result
-    outText = api->GetUTF8Text();
-    printf("OCR output:\n%s", outText);
-
-    // Destroy used object and release memory
-    api->End();
-    pixDestroy(&image);
-    system("pause");
-    return;
-}*/

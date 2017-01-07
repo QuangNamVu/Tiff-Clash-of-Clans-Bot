@@ -71,7 +71,7 @@ void captureScreenshot(HWND hWnd, int x, int y, int w, int h, string name) {
 
 /*
  * Save an image to file.
- * Code modified from MSDN documentation:
+ * Code adapted from MSDN documentation:
  * https://msdn.microsoft.com/en-us/library/dd145119.aspx
  */
 bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
@@ -83,11 +83,12 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     BITMAPFILEHEADER bmfHdr;
     BITMAPINFOHEADER bi;
     LPBITMAPINFOHEADER lpbi;
-    HANDLE fh, hDib, hPal,hOldPal=NULL;
+    HANDLE fh, hDib, hPal, hOldPal=NULL;
  
     hDC = CreateDC("DISPLAY", NULL, NULL, NULL);
     iBits = GetDeviceCaps(hDC, BITSPIXEL) * GetDeviceCaps(hDC, PLANES);
     DeleteDC(hDC);
+
     if (iBits <= 1)
         wBitCount = 1;
     else if (iBits <= 4)
@@ -95,7 +96,8 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     else if (iBits <= 8)
         wBitCount = 8;
     else
-    wBitCount = 24;
+        wBitCount = 24;
+
     GetObject(hBitmap, sizeof(Bitmap), (LPSTR)&Bitmap);
     bi.biSize = sizeof(BITMAPINFOHEADER);
     bi.biWidth = Bitmap.bmWidth;
@@ -110,7 +112,7 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     bi.biClrUsed = 0;
     dwBmBitsSize = ((Bitmap.bmWidth * wBitCount + 31) / 32) * 4 * Bitmap.bmHeight;
 
-    hDib = GlobalAlloc(GHND,dwBmBitsSize + dwPaletteSize + sizeof(BITMAPINFOHEADER));
+    hDib = GlobalAlloc(GHND, dwBmBitsSize + dwPaletteSize + sizeof(BITMAPINFOHEADER));
     lpbi = (LPBITMAPINFOHEADER)GlobalLock(hDib);
     *lpbi = bi;
 
@@ -122,7 +124,7 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     }
 
     GetDIBits(hDC, hBitmap, 0, (UINT) Bitmap.bmHeight, (LPSTR)lpbi + sizeof(BITMAPINFOHEADER)
-    +dwPaletteSize, (BITMAPINFO *)lpbi, DIB_RGB_COLORS);
+    + dwPaletteSize, (BITMAPINFO *)lpbi, DIB_RGB_COLORS);
 
     if (hOldPal) {
         SelectPalette(hDC, (HPALETTE)hOldPal, TRUE);
@@ -134,7 +136,7 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
     FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
  
     if (fh == INVALID_HANDLE_VALUE)
-    return FALSE;
+        return FALSE;
 
     bmfHdr.bfType = 0x4D42;
     dwDIBSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + dwPaletteSize + dwBmBitsSize;
@@ -157,7 +159,7 @@ bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName) {
  * the template matches the image, within an accuracy range [0, 1].
  * If no match is found, returns the point (-1, -1).
  */
-cv::Point matchImages(cv::Mat base, cv::Mat match, float acc) {
+cv::Point matchImages(cv::Mat base, cv::Mat match, double accThreshhold) {
     cv::Mat img_display;
     cv::Mat result;
 
@@ -172,9 +174,9 @@ cv::Point matchImages(cv::Mat base, cv::Mat match, float acc) {
     cv::Point matchLoc;
     cv::minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, cv::Mat());
     matchLoc = maxLoc;
-    float err = result.at<float>(matchLoc.y, matchLoc.x);
+    float acc = result.at<float>(matchLoc.y, matchLoc.x);
 
-    if( err > acc )
+    if( acc > accThreshhold )
         return matchLoc;
     else
         return cv::Point(-1,-1);
@@ -201,7 +203,7 @@ vector<cv::Point> getArrayMatches(cv::Mat base, vector<cv::Mat> templates) {
     vector<cv::Point> v;
 
     // Try each template image (gold mine)
-    for(int i = 0; i < templates.size(); i++) {
+    for(unsigned i = 0; i < templates.size(); i++) {
         match = templates.at(i);
         int matchW = match.cols;
         int matchH = match.rows;
@@ -210,7 +212,9 @@ vector<cv::Point> getArrayMatches(cv::Mat base, vector<cv::Mat> templates) {
         // searching until no more matches.
         while(matchLoc.x != -1) {
             matchLoc = matchImages(base, match, MATCH_ACCURACY);
-            if( matchLoc.x == -1 )
+
+            // No more matches found
+            if(matchLoc.x == -1)
                 break;
 
             base = drawRectAt(base, matchLoc.x, matchLoc.y, matchW, matchH);

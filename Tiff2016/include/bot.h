@@ -14,8 +14,10 @@ class State;
 class Bot {
 public:
     int radius;
+    
+    Bot();
 
-    Bot(HWND window);
+    void begin();
     State* getCurrentState();
     void transitionState(State* nextState);
     

@@ -1,21 +1,23 @@
-﻿Build started 1/4/2017 2:25:26 PM.
+﻿Build started 1/7/2017 3:18:09 PM.
      1>Project "C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Tiff2016\Tiff2016.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Creating "Debug\Tiff2016.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Debug\Tiff2016.unsuccessfulbuild".
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Tiff2016\include" /IC:\Users\ivanc\Tess2016\opencv\build\include /IC:\Users\ivanc\Tess2016\tesseract\include /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\bot.cpp src\main.cpp
-         bot.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Tiff2016\include" /IC:\Users\ivanc\Tess2016\opencv\build\include /IC:\Users\ivanc\Tess2016\tesseract\include /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\bot.cpp src\controls.cpp src\main.cpp src\utils.cpp src\window.cpp
+         window.cpp
          Generating Code...
-         Compiling...
+         Skipping... (no relevant changes detected)
+         utils.cpp
          main.cpp
-         Generating Code...
+         controls.cpp
+         bot.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Debug\Tiff2016.exe" /NOLOGO /LIBPATH:C:\Users\ivanc\Tess2016\opencv\build\x86\vc10\lib /LIBPATH:C:\Users\ivanc\Tess2016\tesseract\lib liblept168.lib libtesseract302.lib liblept168d.lib libtesseract302d.lib opencv_calib3d2410d.lib opencv_contrib2410d.lib opencv_core2410d.lib opencv_features2d2410d.lib opencv_flann2410d.lib opencv_gpu2410d.lib opencv_highgui2410d.lib opencv_imgproc2410d.lib opencv_legacy2410d.lib opencv_ml2410d.lib opencv_nonfree2410d.lib opencv_objdetect2410d.lib opencv_ocl2410d.lib opencv_photo2410d.lib opencv_stitching2410d.lib opencv_superres2410d.lib opencv_ts2410d.lib opencv_video2410d.lib opencv_videostab2410d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Tiff2016.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Debug\Tiff2016.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Debug\Tiff2016.lib" /MACHINE:X86 Debug\controls.obj
-         Debug\coords.obj
+         Debug\button.obj
          Debug\main.obj
          Debug\bot.obj
+         Debug\utils.obj
          Debug\window.obj
-         LINK : C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Debug\Tiff2016.exe not found or not built by the last incremental link; performing full link
          Tiff2016.vcxproj -> C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Debug\Tiff2016.exe
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\ivanc\Tess2016\Tiff-Clash-of-Clans-Bot\Debug\Tiff2016.exe;#1" /manifest Debug\Tiff2016.exe.intermediate.manifest
@@ -26,4 +28,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.07
+Time Elapsed 00:00:01.71

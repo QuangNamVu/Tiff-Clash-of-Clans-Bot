@@ -20,7 +20,7 @@ HWND getHWND(string text);
 void captureScreenshot(HWND hWnd);
 void captureScreenshot(HWND hWnd, int x, int y, int w, int h, string name);
 bool SaveToFile(HBITMAP hBitmap, LPCTSTR lpszFileName);
-cv::Point matchImages(cv::Mat base, cv::Mat match, float acc);
+cv::Point matchImages(cv::Mat base, cv::Mat match, double acc);
 vector<cv::Point> getArrayMatches(cv::Mat base, vector<cv::Mat> matches);
 
 #endif

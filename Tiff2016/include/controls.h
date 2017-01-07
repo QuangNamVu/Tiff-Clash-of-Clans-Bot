@@ -3,11 +3,8 @@
 
 #include <vector>
 #include <iostream>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 #include <windows.h>
-#include "coords.h"
+#include "button.h"
 #include "utils.h"
 
 using namespace std;
@@ -16,7 +13,12 @@ using namespace std;
  * Simulates user controls like clicks and key actions.
  */
 
-void sendClick(HWND hWnd, Coords coords);
+const int UP_ARROW_KEYCODE = 0x26;
+const int DOWN_ARROW_KEYCODE = 0x28;
+const int KEY_PRESS_TRIES = 10;
+
+void sendClickAndWait(HWND hWnd, Button coords);
+void sendClick(HWND hWnd, Button coords);
 void sendClick(HWND hWnd, int x, int y);
 void sendMouseDown(HWND hWnd, int x, int y);
 void sendMouseUp(HWND hWnd, int x, int y);

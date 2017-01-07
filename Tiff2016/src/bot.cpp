@@ -23,13 +23,14 @@ vector<cv::Mat> Bot::loadSprites() {
 }
 
 /*
- * Initializes bot's state machine and boots up the main loop.
- * Transitions to InitState.
+ * Initializes the window handle and sprite list.
  */
-Bot::Bot(HWND window) {
-    hWnd = window;
+Bot::Bot() {
+    hWnd = getHWND("Nox App Player");
     matches = loadSprites();
-    
+}
+
+void Bot::begin() {
     InitState* initState = new InitState();
     currentState = initState;
     
@@ -63,12 +64,8 @@ void InitState::enter(HWND window, Bot* b) {
     bot = b;
 
     zoomOut(hWnd);
-
-    sendClick(hWnd, Coords::ATTACK);
-    pauseTime(ATTACK_DELAY);
-
-    sendClick(hWnd, Coords::FIND_MATCH);
-    pauseTime(FIND_MATCH_DELAY);
+    sendClickAndWait(hWnd, Button::ATTACK);
+    sendClickAndWait(hWnd, Button::FIND_MATCH);
 
     SearchState* searchState = new SearchState();
     bot->transitionState(searchState);
@@ -100,8 +97,7 @@ void SearchState::enter(HWND window, Bot* b) {
             break;
         } else {
             // Not found, keep searching
-            sendClick(hWnd, Coords::NEXT);
-            pauseTime(NEXT_DELAY);
+            sendClick(hWnd, Button::NEXT);
         }
     }
 
@@ -121,17 +117,12 @@ void RaidState::enter(HWND window, Bot* b) {
     // Takes each the coordinate of each gold mine found and deploys
     // troops in a circle around it.
     raidCoordinates(matchArray, hWnd);
-    pauseTime(RAID_DELAY);
+    pauseTime(Button::RAID_DELAY);
     
     // Exit the raid and return home.
-    sendClick(hWnd, Coords::SURRENDER);
-    pauseTime(SURRENDER_DELAY);
-
-    sendClick(hWnd, Coords::CONFIRM);
-    pauseTime(CONFIRM_DELAY);
-
-    sendClick(hWnd, Coords::RETURN);
-    pauseTime(RETURN_DELAY);
+    sendClickAndWait(hWnd, Button::SURRENDER);
+    sendClickAndWait(hWnd, Button::CONFIRM);
+    sendClickAndWait(hWnd, Button::RETURN);
 
     HomeState* homeState = new HomeState();
     bot->transitionState(homeState);
@@ -150,20 +141,15 @@ void HomeState::enter(HWND window, Bot* b) {
     hWnd = window;
 
     // Open the barracks
-    sendClick(hWnd, Coords::ARMY);
-    pauseTime(ARMY_DELAY);
-
-    sendClick(hWnd, Coords::TRAIN);
-    pauseTime(TRAIN_DELAY);
+    sendClickAndWait(hWnd, Button::ARMY);
+    sendClickAndWait(hWnd, Button::TRAIN);
 
     // Trains a bunch of goblins for the next raid.
     for (int i = 0; i < GOBLINS_TO_TRAIN; i++) {
-        sendClick(hWnd, Coords::GOBLIN);
-        pauseTime(CLICK_DELAY);
+        sendClickAndWait(hWnd, Button::GOBLIN);
     }
     
-    sendClick(hWnd, Coords::EXIT_ARMY);
-    pauseTime(EXIT_DELAY);
+    sendClickAndWait(hWnd, Button::EXIT_ARMY);
 
     InitState* initState = new InitState();
     bot->transitionState(initState);

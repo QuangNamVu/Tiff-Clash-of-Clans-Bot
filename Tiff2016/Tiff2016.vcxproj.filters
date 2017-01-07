@@ -21,13 +21,13 @@
     <ClInclude Include="include\controls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\coords.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\bot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,13 +41,13 @@
     <ClCompile Include="src\controls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\coords.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\bot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
