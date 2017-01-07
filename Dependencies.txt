@@ -1,5 +1,0 @@
-Dependencies 
-Tessaract - OCR v3.02
-Nox App Player - v0.10.0.4321 1280x720
-OpenCV - v2.4.13
-
