@@ -7,6 +7,8 @@ object recognition on sprites in the game to find gold mines,
 and simulates mouse clicks inside an android emulator to 
 attack and deploy troops.
 
+Video demo: https://www.youtube.com/watch?v=f9siu5KX0tc
+
 Author: Ivan Chen
 
 ******************************************
